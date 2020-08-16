@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap  -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- VUE JS CDN  -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- VUEX -->
+    <script src="https://unpkg.com/vuex@3.5.1/dist/vuex.js"></script>
+
+    <title>VUEX</title>
+</head>
+
+<body>
+
+    <div id="app" class="container p-5">
+        <titulo></titulo>
+    </div>
+
+    
+    <script>
+        Vue.component('titulo', {
+            template: `
+            <div class="p-5 bg-danger">
+                <h1>numero: {{$store.state.numero}}</h1>
+                <hijo></hijo>
+             </div>
+            `,
+        });
+
+        Vue.component('hijo', {
+            template: `
+            <div class="p-5 bg-info">
+                <h1>numero: {{ numero }}</h1>
+                <button class="btn btn-success" @click="aumentar">+</button>
+                <button class="btn btn-success" @click="menos(2)">-</button>
+                <button class="btn btn-success" @click="obtenerData">listar</button>
+                <ul v-for="item of persona">
+                    <li>{{item.nombre}}</li>
+                </ul>
+             </div>
+            `,
+            computed: {
+                ...Vuex.mapState(['numero','persona'])
+            },
+            methods: {
+                ...Vuex.mapMutations(['aumentar','menos']),
+                ...Vuex.mapActions(['obtenerData'])
+            }
+        });
+
+        // sobre la instancia de vue se llama VUEX 
+        const store = new Vuex.Store({
+            state: {
+                numero: 10,
+                persona: []
+            },
+            mutations: {
+                aumentar(state){
+                    state.numero++;
+                },
+                menos(state,n){
+                    state.numero-=n;
+                },
+                llenarData(state, personaAccion){
+                    state.persona = personaAccion;
+                }
+            },
+            actions:{
+                 obtenerData: async function ({ commit }){
+                    const data = await fetch('data.json');
+                    const db = await data.json();
+                    commit('llenarData',db);
+                }
+            }
+        });
+
+
+
+        new Vue({
+            el: '#app',
+            store: store,
+        })
+    </script>
+
+</body>
+
+</html>
