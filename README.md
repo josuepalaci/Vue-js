@@ -1,5 +1,6 @@
-## Trabajando con Vue
+## Vue JS
 
+Ejemplos sobre el uso de Vue js, utilizandolo desde la CDN y el CLI, integrando bootstrap y BV  
 
 - [Probando Comunicacion Entre Componetes](https://josuepalaci.github.io/Vue-js/examples/comunicacion/)
 
